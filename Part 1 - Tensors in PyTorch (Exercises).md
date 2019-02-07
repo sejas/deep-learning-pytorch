@@ -96,7 +96,16 @@ PyTorch tensors can be added, multiplied, subtracted, etc, just like Numpy array
 
 ```python
 ## Calculate the output of this network using the weights and bias tensors
+h = (features*weights).sum()+bias
+activation(h)
 ```
+
+
+
+
+    tensor([[0.1595]])
+
+
 
 You can do the multiplication and sum in the same operation using a matrix multiplication. In general, you'll want to use matrix multiplications since they are more efficient and accelerated using modern libraries and high-performance computing on GPUs.
 
@@ -130,7 +139,16 @@ I usually use `.view()`, but any of the three methods will work for this. So, no
 
 ```python
 ## Calculate the output of this network using matrix multiplication
+h = torch.mm(features,weights.view(5,1))+bias
+activation(h)
 ```
+
+
+
+
+    tensor([[0.1595]])
+
+
 
 ### Stack them up!
 
@@ -169,7 +187,7 @@ torch.manual_seed(7) # Set the random seed so things are predictable
 features = torch.randn((1, 3))
 
 # Define the size of each layer in our network
-n_input = features.shape[1]     # Number of input units, must match number of input features
+n_input = features.shape[1]     # 3 # Number of input units, must match number of input features
 n_hidden = 2                    # Number of hidden units 
 n_output = 1                    # Number of output units
 
@@ -181,14 +199,38 @@ W2 = torch.randn(n_hidden, n_output)
 # and bias terms for hidden and output layers
 B1 = torch.randn((1, n_hidden))
 B2 = torch.randn((1, n_output))
+
+print("features",features)
+print("W1",W1)
+print("W2",W2)
+print("B1",B1)
+print("B2",B2)
 ```
+
+    features tensor([[-0.1468,  0.7861,  0.9468]])
+    W1 tensor([[-1.1143,  1.6908],
+            [-0.8948, -0.3556],
+            [ 1.2324,  0.1382]])
+    W2 tensor([[-1.6822],
+            [ 0.3177]])
+    B1 tensor([[0.1328, 0.1373]])
+    B2 tensor([[0.2405]])
+
 
 > **Exercise:** Calculate the output for this multi-layer network using the weights `W1` & `W2`, and the biases, `B1` & `B2`. 
 
 
 ```python
 ## Your solution here
+h = activation(torch.mm(features, W1) + B1) # 1,3 * 3,2 + 1,2 the result is (1, 2)
+output = activation(torch.mm(h, W2) + B2) # 1,2 * 2,1 + 1,1 the result is (1, 1)
+print("h",h)
+print("output",output)
 ```
+
+    h tensor([[0.6813, 0.4355]])
+    output tensor([[0.3171]])
+
 
 If you did this correctly, you should see the output `tensor([[ 0.3171]])`.
 
