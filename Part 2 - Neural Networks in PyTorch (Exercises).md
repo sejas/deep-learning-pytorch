@@ -114,7 +114,7 @@ def activation(x):
 ```python
 ## Your solution
 # Flattering
-batch = images.view(64,784)
+batch = images.view(64,-1) # images.view(64,784)
 
 ### Generate some data
 torch.manual_seed(7) # Set the random seed so things are predictable
